@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2b2520" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ShareLink" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Item Detail — ShareLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: var(--nude-50); }
+
+    /* ---- NAV ---- */
+    .app-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(253,248,245,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--nude-200);
+    }
+    .app-nav__logo { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--char); text-decoration: none; }
+    .app-nav__back { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--char-mid); cursor: pointer; transition: color var(--transition); text-decoration: none; }
+    .app-nav__back:hover { color: var(--char); }
+    .app-nav__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--rose); color: white; font-family: var(--font-display); font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
+
+    /* ---- PAGE ---- */
+    .detail-page {
+      padding-top: 64px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    /* breadcrumb */
+    .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      padding: 24px 0 0;
+      font-size: 13px; color: var(--char-soft);
+    }
+    .breadcrumb a { color: var(--char-soft); text-decoration: none; transition: color var(--transition); }
+    .breadcrumb a:hover { color: var(--char); }
+    .breadcrumb__sep { opacity: 0.4; }
+
+    /* ---- MAIN GRID ---- */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 60px;
+      padding: 32px 0 80px;
+      align-items: start;
+    }
+
+    /* ---- GALLERY ---- */
+    .gallery { position: sticky; top: 88px; }
+
+    .gallery__main {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--nude-100);
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 100px;
+      border: 1px solid var(--nude-200);
+      margin-bottom: 14px;
+      overflow: hidden;
+      position: relative;
+      transition: all var(--transition);
+    }
+
+    .gallery__badge {
+      position: absolute; top: 18px; left: 18px;
+      background: var(--char); color: var(--nude-50);
+      padding: 5px 14px; border-radius: 100px;
+      font-size: 12px; font-weight: 500;
+    }
+
+    .gallery__thumbs {
+      display: flex; gap: 10px;
+    }
+
+    .gallery__thumb {
+      flex: 1; aspect-ratio: 1;
+      background: var(--nude-100);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+      overflow: hidden;
+    }
+
+    .gallery__thumb:hover,
+    .gallery__thumb.active {
+      border-color: var(--char);
+    }
+
+    /* ---- DETAIL PANEL ---- */
+    .detail-panel {}
+
+    .detail-panel__cat {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 10px;
+    }
+
+    .detail-panel__title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 500; color: var(--char);
+      line-height: 1.1; margin-bottom: 16px;
+    }
+
+    .detail-panel__meta {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 28px; flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      background: var(--nude-100);
+      border: 1px solid var(--nude-200);
+      border-radius: 100px;
+      font-size: 13px; color: var(--char-mid);
+    }
+
+    .meta-chip.condition-new    { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+    .meta-chip.condition-like   { background: #e8f5e9; border-color: #a5d6a7; color: #388e3c; }
+    .meta-chip.condition-good   { background: #fff8e1; border-color: #ffe082; color: #f57f17; }
+    .meta-chip.condition-fair   { background: #fce4ec; border-color: #f48fb1; color: #c2185b; }
+
+    .detail-panel__desc {
+      font-size: 16px; color: var(--char-mid);
+      line-height: 1.75; margin-bottom: 32px;
+      border-left: 3px solid var(--nude-200);
+      padding-left: 20px;
+    }
+
+    /* Info rows */
+    .info-rows { margin-bottom: 32px; }
+
+    .info-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--nude-100);
+      font-size: 14px;
+    }
+
+    .info-row:first-child { border-top: 1px solid var(--nude-100); }
+
+    .info-row__label { color: var(--char-soft); }
+    .info-row__val { color: var(--char); font-weight: 500; }
+
+    /* Poster card */
+    .poster-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--nude-200);
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .poster-card:hover { border-color: var(--nude-300); box-shadow: var(--shadow); }
+
+    .poster-card__avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--rose); color: white;
+      font-family: var(--font-display); font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .poster-card__name { font-weight: 500; font-size: 15px; color: var(--char); }
+    .poster-card__sub { font-size: 13px; color: var(--char-soft); margin-top: 2px; }
+
+    .poster-card__badge {
+      margin-left: auto;
+      font-size: 12px; padding: 4px 10px;
+      background: var(--nude-100); border-radius: 100px;
+      color: var(--char-mid);
+    }
+
+    /* CTA buttons */
+    .detail-cta { display: flex; flex-direction: column; gap: 12px; }
+
+    .detail-cta .btn {
+      width: 100%; justify-content: center;
+      padding: 16px; font-size: 16px;
+    }
+
+    .btn--outline {
+      background: transparent;
+      border: 1.5px solid var(--nude-300);
+      color: var(--char-mid);
+    }
+    .btn--outline:hover { border-color: var(--char); color: var(--char); }
+
+    /* Success state */
+    .request-success {
+      display: none;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+    }
+    .request-success.show { display: block; }
+    .request-success h3 { font-family: var(--font-display); font-size: 22px; color: #2e7d32; margin-bottom: 6px; }
+    .request-success p { font-size: 14px; color: #388e3c; }
+
+    /* Similar items */
+    .similar { padding-bottom: 80px; }
+
+    .similar__header {
+      display: flex; align-items: baseline;
+      justify-content: space-between; margin-bottom: 24px;
+    }
+
+    .similar__title {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 500; color: var(--char);
+    }
+
+    .similar__link { font-size: 14px; color: var(--rose-dark); }
+
+    .similar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .sim-card {
+      background: white;
+      border: 1px solid var(--nude-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .sim-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+    .sim-card__img {
+      aspect-ratio: 1; background: var(--nude-100);
+      display: flex; align-items: center; justify-content: center; font-size: 40px;
+    }
+
+    .sim-card__body { padding: 14px; }
+    .sim-card__name { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--char); margin-bottom: 4px; }
+    .sim-card__loc { font-size: 12px; color: var(--char-soft); }
+
+    /* Share bar */
+    .share-bar {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 24px;
+    }
+    .share-bar__label { font-size: 13px; color: var(--char-soft); }
+    .share-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--nude-200);
+      background: white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: all var(--transition);
+    }
+    .share-btn:hover { border-color: var(--char); background: var(--nude-100); }
+
+    @media (max-width: 860px) {
+      .detail-grid { grid-template-columns: 1fr; gap: 32px; }
+      .gallery { position: static; }
+      .similar-grid { grid-template-columns: repeat(2, 1fr); }
+      .app-nav { padding: 0 20px; }
+      .detail-page { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="app-nav">
+    <a href="home.html" class="app-nav__back">← Browse</a>
+    <a href="index.html" class="app-nav__logo">ShareLink</a>
+    <a href="profile.html" class="app-nav__avatar">S</a>
+  </nav>
+
+  <div class="detail-page">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+      <a href="home.html">All items</a>
+      <span class="breadcrumb__sep">›</span>
+      <a href="home.html?cat=books">Books &amp; Education</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>WAEC Biology Textbook</span>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="detail-grid">
+
+      <!-- GALLERY -->
+      <div class="gallery">
+        <div class="gallery__main" id="main-image">
+          <span class="gallery__badge">Like new</span>
+          <span id="main-emoji">📚</span>
+        </div>
+        <div class="gallery__thumbs">
+          <div class="gallery__thumb active" data-emoji="📚">📚</div>
+          <div class="gallery__thumb" data-emoji="📖">📖</div>
+          <div class="gallery__thumb" data-emoji="🔍">🔍</div>
+          <div class="gallery__thumb" data-emoji="📝">📝</div>
+        </div>
+      </div>
+
+      <!-- DETAIL PANEL -->
+      <div class="detail-panel">
+        <div class="detail-panel__cat">📚 Books &amp; Education</div>
+
+        <h1 class="detail-panel__title">WAEC Biology Textbook</h1>
+
+        <div class="detail-panel__meta">
+          <span class="meta-chip condition-like">✓ Like new</span>
+          <span class="meta-chip">📍 Yaba</span>
+          <span class="meta-chip">⏱ Posted 2 hours ago</span>
+        </div>
+
+        <p class="detail-panel__desc">
+          Stone &amp; Pickering Biology, 2020 edition. Very good condition — spine is intact, no torn pages. A few light pencil notes in chapters 3 and 7 that can be erased. Comes with the accompanying past questions booklet.
+        </p>
+
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="info-row__label">Condition</span>
+            <span class="info-row__val">Like new</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Category</span>
+            <span class="info-row__val">Books &amp; Education</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Location</span>
+            <span class="info-row__val">Yaba, Lagos</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Handoff</span>
+            <span class="info-row__val">Pickup or can drop off nearby</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Requests</span>
+            <span class="info-row__val">3 people interested</span>
+          </div>
+        </div>
+
+        <!-- POSTER -->
+        <div class="poster-card" onclick="window.location.href='profile.html'">
+          <div class="poster-card__avatar">A</div>
+          <div>
+            <div class="poster-card__name">Amara O.</div>
+            <div class="poster-card__sub">Member since Jan 2025 · 12 items shared</div>
+          </div>
+          <span class="poster-card__badge">⭐ Trusted</span>
+        </div>
+
+        <!-- CTA -->
+        <div class="detail-cta" id="cta-area">
+          <button class="btn btn--primary" id="request-btn">Request this item</button>
+          <button class="btn btn--outline" id="message-btn">💬 Message Amara</button>
+        </div>
+
+        <div class="request-success" id="request-success">
+          <h3>Request sent! 🎉</h3>
+          <p>Amara will be notified. You'll hear back soon — check your messages.</p>
+        </div>
+
+        <!-- SHARE -->
+        <div class="share-bar">
+          <span class="share-bar__label">Share</span>
+          <button class="share-btn" title="Copy link" id="copy-link-btn">🔗</button>
+          <button class="share-btn" title="Share on WhatsApp">💬</button>
+          <button class="share-btn" title="Save item" id="save-btn">♡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMILAR ITEMS -->
+    <div class="similar">
+      <div class="similar__header">
+        <h2 class="similar__title">More in Books &amp; Education</h2>
+        <a href="home.html?cat=books" class="similar__link">See all →</a>
+      </div>
+      <div class="similar-grid">
+        <div class="sim-card" onclick="window.location.href='item-detail.html'">
+          <div class="sim-card__img">📖</div>
+          <div class="sim-card__body">
+            <div class="sim-card__name">A-Level Chemistry Set</div>
+            <div class="sim-card__loc">📍 Ikoyi</div>
+          </div>
+        </div>
+        <div class="sim-card" onclick="window.location.href='item-detail.html'">
+          <div class="sim-card__img">📐</div>
+          <div class="sim-card__body">
+            <div class="sim-card__name">IGCSE Maths Past Papers</div>
+            <div class="sim-card__loc">📍 Ikeja</div>
+          </div>
+        </div>
+        <div class="sim-card" onclick="window.location.href='item-detail.html'">
+          <div class="sim-card__img">📗</div>
+          <div class="sim-card__body">
+            <div class="sim-card__name">Oxford English Dictionary</div>
+            <div class="sim-card__loc">📍 Surulere</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Gallery thumbnails
+    document.querySelectorAll('.gallery__thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        document.querySelectorAll('.gallery__thumb').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        document.getElementById('main-emoji').textContent = thumb.dataset.emoji;
+      });
+    });
+
+    // Request button
+    document.getElementById('request-btn').addEventListener('click', () => {
+      const btn = document.getElementById('request-btn');
+      btn.textContent = 'Sending request...';
+      btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById('cta-area').style.display = 'none';
+        document.getElementById('request-success').classList.add('show');
+      }, 800);
+    });
+
+    // Message button
+    document.getElementById('message-btn').addEventListener('click', () => {
+      const btn = document.getElementById('message-btn');
+      btn.textContent = '✓ Message window opening...';
+      // Future: open chat panel
+    });
+
+    // Save/heart
+    let saved = false;
+    document.getElementById('save-btn').addEventListener('click', function() {
+      saved = !saved;
+      this.textContent = saved ? '♥' : '♡';
+      this.style.color = saved ? 'var(--rose-dark)' : '';
+    });
+
+    // Copy link
+    document.getElementById('copy-link-btn').addEventListener('click', function() {
+      navigator.clipboard.writeText(window.location.href).catch(() => {});
+      this.textContent = '✓';
+      setTimeout(() => this.textContent = '🔗', 1500);
+    });
+  </script>
+</body>
+</html>

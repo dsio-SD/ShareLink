@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2b2520" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ShareLink" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — ShareLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: var(--nude-50); }
+
+    /* NAV */
+    .app-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(253,248,245,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--nude-200);
+    }
+    .app-nav__logo { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--char); text-decoration: none; }
+    .app-nav__back { font-size: 14px; color: var(--char-mid); text-decoration: none; transition: color var(--transition); }
+    .app-nav__back:hover { color: var(--char); }
+
+    /* PAGE */
+    .profile-page {
+      padding-top: 64px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding-left: 40px;
+      padding-right: 40px;
+      padding-bottom: 80px;
+    }
+
+    /* HERO BANNER */
+    .profile-banner {
+      height: 160px;
+      background: linear-gradient(135deg, var(--char) 0%, var(--char-mid) 100%);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      margin: 0 -40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-banner::before {
+      content: '';
+      position: absolute; bottom: -60px; right: -60px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: rgba(201,135,122,0.18);
+    }
+
+    .profile-banner::after {
+      content: '';
+      position: absolute; top: -40px; left: 30%;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(201,135,122,0.10);
+    }
+
+    /* PROFILE HEADER */
+    .profile-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-top: -52px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .profile-avatar {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: var(--rose); color: white;
+      font-family: var(--font-display); font-size: 42px;
+      display: flex; align-items: center; justify-content: center;
+      border: 4px solid var(--nude-50);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .profile-avatar__edit {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--char); color: white;
+      font-size: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px solid var(--nude-50);
+    }
+
+    .profile-header__info {
+      flex: 1;
+      padding-bottom: 6px;
+    }
+
+    .profile-header__name {
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 500; color: var(--char);
+      margin-bottom: 4px;
+    }
+
+    .profile-header__meta {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; color: var(--char-soft); flex-wrap: wrap;
+    }
+
+    .profile-header__meta-sep { opacity: 0.4; }
+
+    .profile-header__actions {
+      display: flex; gap: 10px; padding-bottom: 6px;
+    }
+
+    .btn--sm {
+      padding: 9px 20px;
+      font-size: 13px;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--nude-200);
+      border-radius: var(--radius-md);
+      padding: 22px 20px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+    .stat-card__num {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 500; color: var(--char);
+      line-height: 1; margin-bottom: 6px;
+    }
+
+    .stat-card__label { font-size: 12px; color: var(--char-soft); letter-spacing: 0.04em; }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--nude-200);
+      margin-bottom: 32px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 14px; font-weight: 500;
+      color: var(--char-soft);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all var(--transition);
+    }
+
+    .tab:hover { color: var(--char); }
+    .tab.active { color: var(--char); border-bottom-color: var(--char); }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Items grid */
+    .profile-items-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .profile-item-card {
+      background: white;
+      border: 1px solid var(--nude-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+    }
+    .profile-item-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+    .profile-item-card__img {
+      aspect-ratio: 1; background: var(--nude-100);
+      display: flex; align-items: center; justify-content: center; font-size: 44px;
+    }
+
+    .profile-item-card__body { padding: 14px; }
+    .profile-item-card__name { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--char); margin-bottom: 4px; }
+    .profile-item-card__sub { font-size: 12px; color: var(--char-soft); }
+
+    .profile-item-card__status {
+      position: absolute; top: 10px; right: 10px;
+      padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 500;
+    }
+    .status-available { background: #e8f5e9; color: #2e7d32; }
+    .status-requested { background: #fff8e1; color: #f57f17; }
+    .status-given     { background: var(--nude-200); color: var(--char-soft); }
+
+    /* Activity feed */
+    .activity-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--nude-100);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--nude-100); border: 1px solid var(--nude-200);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+
+    .activity-item__text { font-size: 14px; color: var(--char-mid); line-height: 1.5; }
+    .activity-item__text strong { color: var(--char); font-weight: 500; }
+    .activity-item__time { font-size: 12px; color: var(--char-soft); margin-top: 3px; }
+
+    /* Settings panel */
+    .settings-group { margin-bottom: 32px; }
+
+    .settings-group__title {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--char-soft); margin-bottom: 12px;
+    }
+
+    .settings-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      background: white; border: 1px solid var(--nude-200);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      font-size: 14px; color: var(--char);
+    }
+
+    .settings-row__right { display: flex; align-items: center; gap: 12px; color: var(--char-soft); font-size: 13px; }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative; width: 42px; height: 24px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: var(--nude-300); border-radius: 100px;
+      transition: background var(--transition);
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      left: 3px; top: 3px; background: white;
+      transition: transform var(--transition);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--char); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--char-soft);
+    }
+    .empty-state__icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-family: var(--font-display); font-size: 22px; color: var(--char); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+
+    /* Logout */
+    .logout-btn {
+      width: 100%; margin-top: 20px;
+      padding: 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid #fce4ec;
+      background: transparent; color: #c2185b;
+      font-family: var(--font-body); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all var(--transition);
+    }
+    .logout-btn:hover { background: #fce4ec; }
+
+    @media (max-width: 768px) {
+      .app-nav { padding: 0 20px; }
+      .profile-page { padding-left: 20px; padding-right: 20px; }
+      .profile-banner { margin: 0 -20px; }
+      .profile-header { flex-wrap: wrap; }
+      .profile-header__actions { width: 100%; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .profile-items-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="app-nav">
+    <a href="home.html" class="app-nav__back">← Feed</a>
+    <a href="index.html" class="app-nav__logo">ShareLink</a>
+    <a href="post-item.html" class="btn btn--primary" style="padding:9px 18px;font-size:13px;">+ Post item</a>
+  </nav>
+
+  <div class="profile-page">
+
+    <!-- BANNER -->
+    <div class="profile-banner"></div>
+
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <div class="profile-avatar">
+        S
+        <div class="profile-avatar__edit">✎</div>
+      </div>
+      <div class="profile-header__info">
+        <div class="profile-header__name">Somto O.</div>
+        <div class="profile-header__meta">
+          <span>📍 Lagos, Nigeria</span>
+          <span class="profile-header__meta-sep">·</span>
+          <span>Member since Jan 2025</span>
+          <span class="profile-header__meta-sep">·</span>
+          <span>⭐ Trusted giver</span>
+        </div>
+      </div>
+      <div class="profile-header__actions">
+        <button class="btn btn--ghost btn--sm" id="edit-profile-btn">Edit profile</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card__num">12</div>
+        <div class="stat-card__label">Items given</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__num">3</div>
+        <div class="stat-card__label">Items received</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__num">4</div>
+        <div class="stat-card__label">Active listings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__num">100%</div>
+        <div class="stat-card__label">Response rate</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" data-tab="my-items">My items</div>
+      <div class="tab" data-tab="requested">Requested</div>
+      <div class="tab" data-tab="activity">Activity</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <!-- MY ITEMS TAB -->
+    <div class="tab-panel active" id="tab-my-items">
+      <div class="profile-items-grid">
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">📚</div>
+          <span class="profile-item-card__status status-requested">3 requests</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">WAEC Biology Textbook</div>
+            <div class="profile-item-card__sub">Posted 2 hours ago · Yaba</div>
+          </div>
+        </div>
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">👗</div>
+          <span class="profile-item-card__status status-available">Available</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">School Uniform (Size 14)</div>
+            <div class="profile-item-card__sub">Posted 3 days ago · Surulere</div>
+          </div>
+        </div>
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">🪑</div>
+          <span class="profile-item-card__status status-given">Given away</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">Wooden Study Chair</div>
+            <div class="profile-item-card__sub">Posted 2 weeks ago · Yaba</div>
+          </div>
+        </div>
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">🔌</div>
+          <span class="profile-item-card__status status-available">Available</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">Power Strip</div>
+            <div class="profile-item-card__sub">Posted 1 week ago · Yaba</div>
+          </div>
+        </div>
+        <div class="profile-item-card" onclick="window.location.href='post-item.html'" style="border-style:dashed;background:transparent;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:180px;color:var(--char-soft);">
+          <span style="font-size:32px;">+</span>
+          <span style="font-size:14px;">Post new item</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- REQUESTED TAB -->
+    <div class="tab-panel" id="tab-requested">
+      <div class="profile-items-grid">
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">⚽</div>
+          <span class="profile-item-card__status status-requested">Pending</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">Football Boots (Size 41)</div>
+            <div class="profile-item-card__sub">Requested yesterday · VI</div>
+          </div>
+        </div>
+        <div class="profile-item-card" onclick="window.location.href='item-detail.html'">
+          <div class="profile-item-card__img">💻</div>
+          <span class="profile-item-card__status status-given">Confirmed ✓</span>
+          <div class="profile-item-card__body">
+            <div class="profile-item-card__name">USB-C Charging Cable</div>
+            <div class="profile-item-card__sub">Received last week · Lekki</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY TAB -->
+    <div class="tab-panel" id="tab-activity">
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon">📬</div>
+          <div>
+            <div class="activity-item__text"><strong>Chidi A.</strong> requested your <strong>WAEC Biology Textbook</strong></div>
+            <div class="activity-item__time">2 hours ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">📬</div>
+          <div>
+            <div class="activity-item__text"><strong>Funmi O.</strong> and 2 others also requested your <strong>WAEC Biology Textbook</strong></div>
+            <div class="activity-item__time">3 hours ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">✅</div>
+          <div>
+            <div class="activity-item__text">You gave away your <strong>Wooden Study Chair</strong> to <strong>Temi B.</strong></div>
+            <div class="activity-item__time">2 weeks ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">📦</div>
+          <div>
+            <div class="activity-item__text">You posted a new item: <strong>School Uniform (Size 14)</strong></div>
+            <div class="activity-item__time">3 days ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">🎉</div>
+          <div>
+            <div class="activity-item__text">You received a <strong>USB-C Charging Cable</strong> from <strong>Kemi L.</strong></div>
+            <div class="activity-item__time">1 week ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-panel" id="tab-settings">
+
+      <div class="settings-group">
+        <div class="settings-group__title">Account</div>
+        <div class="settings-row">
+          <span>Name</span>
+          <div class="settings-row__right">Somto O. <span>›</span></div>
+        </div>
+        <div class="settings-row">
+          <span>Email</span>
+          <div class="settings-row__right">somto@email.com <span>›</span></div>
+        </div>
+        <div class="settings-row">
+          <span>Location</span>
+          <div class="settings-row__right">Yaba, Lagos <span>›</span></div>
+        </div>
+        <div class="settings-row">
+          <span>Password</span>
+          <div class="settings-row__right">Change <span>›</span></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group__title">Notifications</div>
+        <div class="settings-row">
+          <span>Item requests</span>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span>New messages</span>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span>Items near me</span>
+          <label class="toggle">
+            <input type="checkbox" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span>Weekly digest</span>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group__title">Privacy</div>
+        <div class="settings-row">
+          <span>Show location to others</span>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span>Show activity to others</span>
+          <label class="toggle">
+            <input type="checkbox" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <button class="logout-btn" onclick="window.location.href='index.html'">Log out</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

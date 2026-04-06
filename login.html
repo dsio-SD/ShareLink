@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2b2520" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ShareLink" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in — ShareLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel — decorative */
+    .auth-panel {
+      background: var(--char);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,135,122,0.2) 0%, transparent 70%);
+    }
+
+    .auth-panel__logo {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--nude-50);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-panel__body {
+      z-index: 1;
+    }
+
+    .auth-panel__headline {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 400;
+      color: var(--nude-50);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .auth-panel__headline em {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .auth-panel__sub {
+      font-size: 15px;
+      color: var(--char-soft);
+      line-height: 1.65;
+      max-width: 320px;
+    }
+
+    .auth-panel__stat {
+      display: flex;
+      gap: 32px;
+      z-index: 1;
+    }
+
+    .auth-panel__stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-panel__stat-num {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--nude-50);
+    }
+
+    .auth-panel__stat-label {
+      font-size: 12px;
+      color: var(--char-soft);
+    }
+
+    /* Right panel — form */
+    .auth-form-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 40px;
+      background: var(--nude-50);
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .auth-form__title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--char);
+      margin-bottom: 8px;
+    }
+
+    .auth-form__sub {
+      font-size: 15px;
+      color: var(--char-soft);
+      margin-bottom: 40px;
+    }
+
+    .auth-form__sub a {
+      color: var(--rose-dark);
+      font-weight: 500;
+    }
+
+    /* Form fields */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--char);
+      letter-spacing: 0.02em;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--nude-300);
+      border-radius: var(--radius-sm);
+      background: white;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--char);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .field input:focus {
+      border-color: var(--char);
+      box-shadow: 0 0 0 3px rgba(43, 37, 32, 0.06);
+    }
+
+    .field input::placeholder {
+      color: var(--char-soft);
+    }
+
+    .field__forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field__forgot a {
+      font-size: 13px;
+      color: var(--char-soft);
+      transition: color var(--transition);
+    }
+
+    .field__forgot a:hover { color: var(--rose-dark); }
+
+    .auth-submit {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 24px;
+      padding: 15px;
+      font-size: 15px;
+      justify-content: center;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--nude-200);
+    }
+
+    .auth-divider span {
+      font-size: 13px;
+      color: var(--char-soft);
+    }
+
+    .auth-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 13px;
+      border: 1.5px solid var(--nude-300);
+      border-radius: var(--radius-sm);
+      background: white;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--char);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-weight: 400;
+    }
+
+    .auth-google:hover {
+      border-color: var(--char-mid);
+      background: var(--nude-50);
+    }
+
+    .auth-signup-prompt {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 14px;
+      color: var(--char-soft);
+    }
+
+    .auth-signup-prompt a {
+      color: var(--char);
+      font-weight: 500;
+    }
+
+    /* Error state */
+    .field input.error {
+      border-color: var(--rose-dark);
+    }
+
+    .field__error-msg {
+      font-size: 12px;
+      color: var(--rose-dark);
+      display: none;
+    }
+
+    .field input.error + .field__error-msg,
+    .field input.error ~ .field__error-msg {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+      .auth-form-wrap { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT PANEL -->
+  <div class="auth-panel">
+    <a href="index.html" class="auth-panel__logo">ShareLink</a>
+
+    <div class="auth-panel__body">
+      <h2 class="auth-panel__headline">
+        Good things<br />are meant to be<br /><em>shared.</em>
+      </h2>
+      <p class="auth-panel__sub">
+        Join a community of people giving and receiving what they need — for free.
+      </p>
+    </div>
+
+    <div class="auth-panel__stat">
+      <div class="auth-panel__stat-item">
+        <span class="auth-panel__stat-num">2,400+</span>
+        <span class="auth-panel__stat-label">Items shared</span>
+      </div>
+      <div class="auth-panel__stat-item">
+        <span class="auth-panel__stat-num">840</span>
+        <span class="auth-panel__stat-label">Members</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — FORM -->
+  <div class="auth-form-wrap">
+    <div class="auth-form">
+      <h1 class="auth-form__title">Welcome back.</h1>
+      <p class="auth-form__sub">
+        Don't have an account? <a href="signup.html">Sign up free</a>
+      </p>
+
+      <div id="login-form">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="field">
+          <div class="field__forgot">
+            <label for="password">Password</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <input
+            type="password"
+            id="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <span class="field__error-msg">Incorrect email or password.</span>
+        </div>
+
+        <button class="btn btn--primary auth-submit" id="login-btn">
+          Log in
+        </button>
+
+        <div class="auth-divider"><span>or continue with</span></div>
+
+        <button class="auth-google" type="button">
+          <!-- Google icon SVG inline -->
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+            <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <p class="auth-signup-prompt">
+        By continuing, you agree to ShareLink's <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Basic login interaction (frontend only — no real auth yet)
+    const loginBtn = document.getElementById('login-btn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    loginBtn.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // Basic validation
+      let valid = true;
+
+      if (!email || !email.includes('@')) {
+        emailInput.classList.add('error');
+        valid = false;
+      } else {
+        emailInput.classList.remove('error');
+      }
+
+      if (!password || password.length < 6) {
+        passwordInput.classList.add('error');
+        valid = false;
+      } else {
+        passwordInput.classList.remove('error');
+      }
+
+      if (valid) {
+        // For now: simulate login and redirect
+        loginBtn.textContent = 'Logging in...';
+        loginBtn.disabled = true;
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 900);
+      }
+    });
+
+    // Clear error on input
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener('input', () => input.classList.remove('error'));
+    });
+
+    // Enter key submits
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2b2520" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ShareLink" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShareLink — Give More. Waste Less.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">ShareLink</a>
+    <div class="nav__links">
+      <a href="home.html" class="nav__link">Browse</a>
+      <a href="login.html" class="nav__link">Log in</a>
+      <a href="signup.html" class="nav__link nav__link--cta">Get started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__tag">
+      <span class="hero__tag-dot"></span>
+      Live in your community
+    </div>
+
+    <h1 class="hero__headline">
+      What you no longer need<br />
+      is someone else's<br />
+      <em>everything.</em>
+    </h1>
+
+    <p class="hero__sub">
+      ShareLink connects people with items to give with the people who need them — no money, no waste, just community.
+    </p>
+
+    <div class="hero__actions">
+      <a href="signup.html" class="btn btn--primary">Start sharing</a>
+      <a href="home.html" class="btn btn--ghost">See what's available &rarr;</a>
+    </div>
+
+    <div class="hero__stats">
+      <div class="hero__stat">
+        <span class="hero__stat-num">2,400+</span>
+        <span class="hero__stat-label">Items shared</span>
+      </div>
+      <div class="hero__stat-divider"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-num">840</span>
+        <span class="hero__stat-label">Members</span>
+      </div>
+      <div class="hero__stat-divider"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-num">12</span>
+        <span class="hero__stat-label">Neighbourhoods</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE STRIP -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Textbooks</span><span class="dot">·</span>
+      <span>Furniture</span><span class="dot">·</span>
+      <span>Baby clothes</span><span class="dot">·</span>
+      <span>Electronics</span><span class="dot">·</span>
+      <span>Kitchen items</span><span class="dot">·</span>
+      <span>Stationery</span><span class="dot">·</span>
+      <span>Sports gear</span><span class="dot">·</span>
+      <span>Books</span><span class="dot">·</span>
+      <span>Shoes</span><span class="dot">·</span>
+      <span>Appliances</span><span class="dot">·</span>
+      <!-- duplicate for seamless loop -->
+      <span>Textbooks</span><span class="dot">·</span>
+      <span>Furniture</span><span class="dot">·</span>
+      <span>Baby clothes</span><span class="dot">·</span>
+      <span>Electronics</span><span class="dot">·</span>
+      <span>Kitchen items</span><span class="dot">·</span>
+      <span>Stationery</span><span class="dot">·</span>
+      <span>Sports gear</span><span class="dot">·</span>
+      <span>Books</span><span class="dot">·</span>
+      <span>Shoes</span><span class="dot">·</span>
+      <span>Appliances</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Simple by design.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__number">01</div>
+        <div class="step__content">
+          <h3>Post an item</h3>
+          <p>Snap a photo, add a description, and list it in under two minutes. No pricing, no fees.</p>
+        </div>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__number">02</div>
+        <div class="step__content">
+          <h3>Someone requests it</h3>
+          <p>Community members browse and request what they need. You get notified instantly.</p>
+        </div>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__number">03</div>
+        <div class="step__content">
+          <h3>Arrange a handoff</h3>
+          <p>Agree on pickup or drop-off. The item finds a new home. Everyone wins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <div class="section-label">Browse by category</div>
+    <h2 class="section-title">Find what you need,<br /><em>or give what you don't.</em></h2>
+
+    <div class="cat-grid">
+      <a href="home.html?cat=books" class="cat-card cat-card--wide">
+        <div class="cat-card__icon">📚</div>
+        <h3>Books &amp; Education</h3>
+        <p>Textbooks, novels, workbooks</p>
+        <span class="cat-card__count">348 items</span>
+      </a>
+      <a href="home.html?cat=electronics" class="cat-card">
+        <div class="cat-card__icon">💻</div>
+        <h3>Electronics</h3>
+        <p>Devices, cables, accessories</p>
+        <span class="cat-card__count">182 items</span>
+      </a>
+      <a href="home.html?cat=clothing" class="cat-card">
+        <div class="cat-card__icon">👗</div>
+        <h3>Clothing</h3>
+        <p>All sizes, all ages</p>
+        <span class="cat-card__count">510 items</span>
+      </a>
+      <a href="home.html?cat=furniture" class="cat-card">
+        <div class="cat-card__icon">🪑</div>
+        <h3>Furniture</h3>
+        <p>Home &amp; office essentials</p>
+        <span class="cat-card__count">97 items</span>
+      </a>
+      <a href="home.html?cat=kitchen" class="cat-card">
+        <div class="cat-card__icon">🍳</div>
+        <h3>Kitchen</h3>
+        <p>Cookware, utensils, appliances</p>
+        <span class="cat-card__count">203 items</span>
+      </a>
+      <a href="home.html?cat=sports" class="cat-card cat-card--accent">
+        <div class="cat-card__icon">⚽</div>
+        <h3>Sports &amp; Hobbies</h3>
+        <p>Gear, equipment, instruments</p>
+        <span class="cat-card__count">156 items</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL / IMPACT -->
+  <section class="impact">
+    <div class="impact__quote-mark">&ldquo;</div>
+    <blockquote class="impact__quote">
+      I got a full set of WAEC textbooks through ShareLink a week before my exams. I don't know what I would have done without it.
+    </blockquote>
+    <div class="impact__author">
+      <div class="impact__author-avatar">A</div>
+      <div>
+        <div class="impact__author-name">Amara O.</div>
+        <div class="impact__author-loc">Lagos Island</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-section">
+    <div class="cta-section__inner">
+      <h2>Your community is waiting.</h2>
+      <p>Join hundreds of people already sharing, giving, and receiving across Lagos.</p>
+      <a href="signup.html" class="btn btn--primary btn--large">Create your account — it's free</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__brand">
+      <span class="nav__logo">ShareLink</span>
+      <p>Built for Technovation Girls 2026 by InnoVantage.</p>
+    </div>
+    <div class="footer__links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy</a>
+    </div>
+  </footer>
+
+  <!-- PWA Install Banner -->
+  <div id="install-banner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;background:var(--char);color:var(--nude-50);padding:16px 20px;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);align-items:center;gap:16px;max-width:380px;width:calc(100vw - 48px);font-family:var(--font-body);font-size:14px;">
+    <span style="font-size:24px;">📲</span>
+    <span style="flex:1;line-height:1.4;">Add ShareLink to your home screen for the full app experience.</span>
+    <button id="install-btn" style="background:var(--rose);color:white;border:none;padding:8px 16px;border-radius:100px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;">Install</button>
+    <button id="install-dismiss" style="background:transparent;border:none;color:var(--nude-300);font-size:18px;cursor:pointer;padding:0 4px;">✕</button>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

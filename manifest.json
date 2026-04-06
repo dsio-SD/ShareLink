@@ -1,0 +1,33 @@
+{
+  "name": "ShareLink",
+  "short_name": "ShareLink",
+  "description": "Give what you don't need. Get what you do.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fdf8f5",
+  "theme_color": "#2b2520",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["social", "shopping", "utilities"],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "label": "ShareLink home feed"
+    }
+  ]
+}
